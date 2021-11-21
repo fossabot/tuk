@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "TUK Backend",
+            "name": "TUK backend dir",
             "type": "python",
             "request": "launch",
             "module": "uvicorn",

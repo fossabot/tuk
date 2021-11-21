@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: FastAPI",
+            "name": "xxx Python: FastAPI",
             "type": "python",
             "request": "launch",
             "module": "uvicorn",
@@ -15,14 +15,17 @@
             "jinja": true
         },
         {
-            "name": "TUK Backend",
+            "name": "xxx TUK Backend",
             "type": "python",
             "request": "launch",
             "module": "uvicorn",
             "args": [
                 "app.main:app",
-                // "main:app",
-                "--reload"
+                "--reload",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                "8000"
             ],
             "jinja": true,
             "cwd": "${workspaceRoot}/backend"

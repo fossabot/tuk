@@ -1,0 +1,21 @@
+
+steps:
+# Build the backend container image
+- name: 'docker'
+  args: [ 'build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend', '-f', 'backend/Dockerfile', 'backend' ]
+
+# Push the backend container image to Container Registry
+- name: 'docker'
+  args: [ 'push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend']
+
+# Deploy backend container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'backend', '--image', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend', '--region', 'europe-west1', '--allow-unauthenticated', '--port=80', '--update-env-vars', 'ENVIRONMENT=tme,AUTH0_AUDIENCE=https://api.trigpointing.me,AUTH0_DOMAIN=teasel.eu.auth0.com']
+
+
+images:
+- 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend'
+
+# You can organize your builds with tags
+# tags: ['gcp-cloud-build-backend-build']
