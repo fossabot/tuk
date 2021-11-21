@@ -40,7 +40,7 @@ steps:
 # Deploy frontend container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'backend', '--image', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend', '--region', 'europe-west1', '--allow-unauthenticated', '--port=80', '--update-env-vars', 'ENVIRONMENT=tme,AUTH0_AUDIENCE=https://api.trigpointing.me,AUTH0_DOMAIN=teasel.eu.auth0.com']
+  args: ['run', 'deploy', 'frontend', '--image', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/frontend', '--region', 'europe-west1', '--allow-unauthenticated', '--port=80']
   id: deploy-frontend
   waitFor:
     - push-frontend
