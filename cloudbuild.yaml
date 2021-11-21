@@ -3,19 +3,52 @@ steps:
 # Build the backend container image
 - name: 'docker'
   args: [ 'build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend', '-f', 'backend/Dockerfile', 'backend' ]
+  id: build-backend
+
+# Build the frontend container image
+- name: 'docker'
+  args: [ 'build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/frontend', '-f', 'frontend/Dockerfile', 'frontend' ]
+  id: build-frontend
+  waitFor: ['-']
+
 
 # Push the backend container image to Container Registry
 - name: 'docker'
   args: [ 'push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend']
+  id: push-backend
+  waitFor:
+    - build-backend
+
+# Push the frontend container image to Container Registry
+- name: 'docker'
+  args: [ 'push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/frontend']
+  id: push-frontend
+  waitFor:
+    - build-frontend
+
+
+
 
 # Deploy backend container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args: ['run', 'deploy', 'backend', '--image', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend', '--region', 'europe-west1', '--allow-unauthenticated', '--port=80', '--update-env-vars', 'ENVIRONMENT=tme,AUTH0_AUDIENCE=https://api.trigpointing.me,AUTH0_DOMAIN=teasel.eu.auth0.com']
+  id: deploy-backend
+  waitFor:
+    - push-backend
+
+# Deploy frontend container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'backend', '--image', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend', '--region', 'europe-west1', '--allow-unauthenticated', '--port=80', '--update-env-vars', 'ENVIRONMENT=tme,AUTH0_AUDIENCE=https://api.trigpointing.me,AUTH0_DOMAIN=teasel.eu.auth0.com']
+  id: deploy-frontend
+  waitFor:
+    - push-frontend
 
 
 images:
 - 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend'
+- 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/frontend'
 
 # You can organize your builds with tags
 # tags: ['gcp-cloud-build-backend-build']
