@@ -1,5 +1,7 @@
 FROM node:16.13.0 as build-stage
+ARG AUTH0_CLIENTID="Please set the AUTH0_CLIENTID build ARG"
 WORKDIR /app
+RUN echo "VUE_APP_AUTH0_CLIENTID=$AUTH0_CLIENTID" | tee .env.local
 COPY package*.json ./
 RUN npm install
 COPY ./ .

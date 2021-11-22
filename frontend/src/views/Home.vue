@@ -3,7 +3,7 @@
 <div class="row">
   <div class="col col-12 col-md-3"><img src='/tme_logo.gif' width='150' height='124' border='0' alt='T:UK logo' /></div>
   <div class="col col-12 col-md-9">       
-    <h1>TrigpointingME - Development System</h1>
+    <h1>TrigpointingME - T:UK Development System</h1>
       <p id="welcome">Welcome!  This site is the testbed for developing the next generation of the TrigpointingUK codebase.
         If you are interested in trigpointing, please visit the public <a href="http://trigpointing.uk">TrigpointingUK</a> website.
       </p>

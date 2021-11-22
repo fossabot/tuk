@@ -1,14 +1,16 @@
 {
 	"folders": [
 		{
-			"name": "tuk",
-			"path": "."
+			"name": "backend",
+			"path": "backend"
 		},
 		{
+			"name": "frontend",
 			"path": "frontend"
 		},
 		{
-			"path": "backend"
+			"name": "tuk",
+			"path": "."
 		}
 	],
 	"settings": {}

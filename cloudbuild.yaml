@@ -6,8 +6,10 @@ steps:
   id: build-backend
 
 # Build the frontend container image
-- name: 'docker'
-  args: [ 'build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/frontend', '-f', 'frontend/Dockerfile', 'frontend' ]
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: [ '-c', 'docker build --build-arg AUTH0_CLIENTID=$$AUTH0_CLIENTID -t europe-west1-docker.pkg.dev/$PROJECT_ID/images/frontend -f frontend/Dockerfile frontend' ]
+  secretEnv: ['AUTH0_CLIENTID']
   id: build-frontend
   waitFor: ['-']
 
@@ -27,8 +29,6 @@ steps:
     - build-frontend
 
 
-
-
 # Deploy backend container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
@@ -45,6 +45,11 @@ steps:
   waitFor:
     - push-frontend
 
+# Get secrets (technically the clientid is not secret, and is included in the final build image, but still don't want it in github )
+availableSecrets:
+  secretManager:
+  - versionName: projects/$PROJECT_ID/secrets/tme-vue-clientid/versions/latest
+    env: AUTH0_CLIENTID
 
 images:
 - 'europe-west1-docker.pkg.dev/$PROJECT_ID/images/backend'
