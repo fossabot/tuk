@@ -1,6 +1,6 @@
 import { Geometry, Point } from 'geojson';
 
-import { Photo } from "src/photos/entities/photo.entity";
+import { Photo } from "../../photos/entities/photo.entity";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn,  UpdateDateColumn, Generated, VersionColumn, Index } from "typeorm";
 
 @Entity()
@@ -39,6 +39,10 @@ export class Trig {
   @Column({ type: 'geography', spatialFeatureType: "Point", srid: 4326, nullable: false })
   wgs_point: Point;
 
+  @Index({ spatial: true })
+  @Column({ type: 'geometry', spatialFeatureType: "Point", srid: 27700, nullable: true })
+  osgb_point: Point;
+
 
 
 
@@ -57,7 +61,7 @@ export class Trig {
   uuid: string;
 
 
-
+  // Foreign keys
   @OneToMany(type => Photo, photo => photo.trig)
   photos: Photo[];
 }
