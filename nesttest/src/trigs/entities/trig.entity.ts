@@ -24,6 +24,17 @@ export class Trig {
   @Column({ type: 'numeric', precision: 8, scale: 3, nullable: true })
   wgs_height?: number;
 
+  @Column({ type: 'numeric', precision: 12, scale: 3, nullable: true })
+  osgb_eastings?: number;
+
+  @Column({ type: 'numeric', precision: 12, scale: 3, nullable: true })
+  osgb_northings?: number;
+
+  @Column({ type: 'numeric', precision: 8, scale: 3, nullable: true })
+  osgb_height?: number;
+
+
+
   @Index({ spatial: true })
   @Column({ type: 'geography', spatialFeatureType: "Point", srid: 4326, nullable: false })
   wgs_point: Point;
