@@ -20,7 +20,7 @@ import { UsersModule } from './users/users.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       synchronize: true,
-      autoLoadEntities: true,
+      autoLoadEntities: true, // autoloads all entities registeres with forFeature()
       // entities: ['**/*.entity{.ts,.js}'],
       // entities: ['dist/**/*.entity.js'],
       migrationsTableName: 'migration',
