@@ -66,7 +66,7 @@ export class TrigsService {
       trig.osgb_point = osgb_point;
     }
 
-    console.log(trig);
+    // console.log(trig);
     return this.trigsRepository.save(trig);
   }
 

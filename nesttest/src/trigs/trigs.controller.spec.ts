@@ -1,42 +1,53 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateTrigDto } from './dto/create-trig.dto';
 import { TrigsController } from './trigs.controller';
 import { TrigsService } from './trigs.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Trig } from './entities/trig.entity';
 
 describe('TrigsController', () => {
-  let controller: TrigsController;
+  let trigsController: TrigsController;
+  let trigsService: TrigsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot(),
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: process.env.POSTGRES_HOST,
-          port: parseInt(process.env.POSTGRES_PORT),
-          username: process.env.POSTGRES_USER,
-          password: process.env.POSTGRES_PASSWORD,
-          database: process.env.POSTGRES_DATABASE,
-          synchronize: true,
-          autoLoadEntities: true,
-          // entities: ['**/*.entity{.ts,.js}'],
-          // entities: ['dist/**/*.entity.js'],
-          migrationsTableName: 'migration',
-          migrations: ['src/migration/*.ts'],
-          cli: { migrationsDir: 'src/migration' },
-        }),
-        TypeOrmModule.forFeature([Trig])
-      ], 
       controllers: [TrigsController],
-      providers: [TrigsService],
+      providers: [
+        TrigsService,
+        {
+          provide: TrigsService,
+          useValue: {
+            create: jest
+              .fn()
+              .mockImplementation((trig: CreateTrigDto) =>
+                Promise.resolve({ id: '1', ...trig }),
+              ),
+            findAll: jest.fn().mockResolvedValue([
+              {
+                firstName: 'firstName #1',
+                lastName: 'lastName #1',
+              },
+              {
+                firstName: 'firstName #2',
+                lastName: 'lastName #2',
+              },
+            ]),
+            findOne: jest.fn().mockImplementation((id: string) =>
+              Promise.resolve({
+                firstName: 'firstName #1',
+                lastName: 'lastName #1',
+                id,
+              }),
+            ),
+            remove: jest.fn(),
+          },
+        }, 
+        ],
     }).compile();
 
-    controller = module.get<TrigsController>(TrigsController);
+    trigsController = module.get<TrigsController>(TrigsController);
+    trigsService = module.get<TrigsService>(TrigsService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(trigsController).toBeDefined();
   });
 });
