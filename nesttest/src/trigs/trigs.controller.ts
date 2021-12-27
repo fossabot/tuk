@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { TrigsService } from './trigs.service';
 // import { Trig } from './entities/trig';
 
@@ -8,6 +8,9 @@ import { ApiTags } from '@nestjs/swagger';
 
 @Controller('trigs')
 @ApiTags('trigs')
+
+@UseInterceptors(ClassSerializerInterceptor)
+
 
 export class TrigsController {
   constructor(private readonly trigsService: TrigsService) {}
@@ -29,8 +32,9 @@ export class TrigsController {
     return this.trigsService.findAll();
   }
 
+  // @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.trigsService.findOne(+id);
   }
 

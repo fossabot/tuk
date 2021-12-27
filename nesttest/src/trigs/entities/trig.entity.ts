@@ -1,6 +1,7 @@
 import { Geometry, Point } from 'geojson';
 import { Photo } from "../../photos/entities/photo.entity";
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn,  UpdateDateColumn, Generated, VersionColumn, Index } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn,  UpdateDateColumn, Generated, VersionColumn, Index, DeleteDateColumn } from "typeorm";
+import { Exclude, Expose } from 'class-transformer';
 
 export enum PhysicalType {
   PILLAR           = "Pillar",
@@ -90,18 +91,30 @@ export class Trig {
   @PrimaryGeneratedColumn("identity") 
   id: number;
 
+  @Exclude()
   @Column({
     type: 'varchar', length: 10, nullable: false, generatedType: 'STORED',
     asExpression: `'TP' || LPAD(id::text, case when id>9999 then 5 else 4 end, '0')`
   })
-  waypoint: string;
+  wp: string;
+
+  @Expose()
+  get waypoint(): string {
+    return 'TP' + this.id.toString().padStart(4, '0');
+  }
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   name: string;
 
+  @Expose()
+  get fullName(): string {
+    return `${this.waypoint} - ${this.name}`
+  }
+
   @Column({type: "enum", enum: Status, default: Status.UNKNOWN })
   status_id: Status
 
+  @Exclude()
   @Column({ type: 'boolean', default: false })
   user_added: boolean;
 
@@ -177,45 +190,56 @@ export class Trig {
   @Column({ type: 'char', length: 50, nullable: true })
   town?: string;
 
+  @Exclude()
   @Column({ type: 'boolean', nullable: true })
   needs_attention?: boolean;
 
+  @Exclude()
   @Column({ type: 'text', nullable: true })
   attention_comment?: string;
 
   // Maybe create abstract class for these columns?
+  @Exclude()
   @CreateDateColumn()
   crt_timestamp?: Date;
 
+  @Exclude()
   @Column({ type: 'int', nullable: true })
   crt_user_id?: number; //TODO: foreign
 
+  @Exclude()
   @Column({ type: 'char', length: 6, nullable: true })
   crt_ip_addr?: number; //TODO: type
 
+  @Exclude()
   @Column({ type: 'int', nullable: true })
   admin_user_id?: number; //TODO: foreign
 
+  @Exclude()
   @Column({ type: 'timestamp without time zone', nullable: true })
   admin_timestamp?: Date;
 
+  @Exclude()
   @Column({ type: 'char', length: 6, nullable: true })
   admin_ip_addr?: number; //TODO: type
 
+  @Exclude()
   @UpdateDateColumn()
   upd_timestamp?: Date;
 
+  @Exclude()
   @VersionColumn({type: 'numeric', default: 0 })
   upd_count?: number;
 
-  @Column()
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
+  @Column({select: false})
   @Generated("uuid")
   uuid: string;
-
-
-
 
   // Foreign keys
   @OneToMany(type => Photo, photo => photo.trig)
   photos: Photo[];
 }
+

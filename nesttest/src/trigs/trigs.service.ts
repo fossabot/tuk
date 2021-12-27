@@ -86,6 +86,6 @@ export class TrigsService {
   }
 
   async remove(id: number) {
-    await this.trigsRepository.delete(id);
+    await this.trigsRepository.softDelete(id);
   }
 }
