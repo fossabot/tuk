@@ -12,9 +12,4 @@ export class User {
   @Column({ type: 'varchar', length: 300 })
   description: string;
 
-  @Column({ type: 'float', nullable: true })
-  latitude?: number;
-
-  @Column({ type: 'float', nullable: true })
-  longitude?: number;
 }

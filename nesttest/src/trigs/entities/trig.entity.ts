@@ -93,7 +93,7 @@ export class Trig {
 
   @Exclude()
   @Column({
-    type: 'varchar', length: 10, nullable: false, generatedType: 'STORED',
+    type: 'varchar', length: 10, nullable: false, generatedType: 'STORED', select: false,
     asExpression: `'TP' || LPAD(id::text, case when id>9999 then 5 else 4 end, '0')`
   })
   wp: string;
@@ -115,7 +115,7 @@ export class Trig {
   status_id: Status
 
   @Exclude()
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: false, })
   user_added: boolean;
 
   @Column({type: "enum", enum: CurrentUse, default: CurrentUse.UNKNOWN })
@@ -191,49 +191,51 @@ export class Trig {
   town?: string;
 
   @Exclude()
-  @Column({ type: 'boolean', nullable: true })
+  @Column({ type: 'boolean', nullable: true, select: false  })
   needs_attention?: boolean;
 
   @Exclude()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, select: false })
   attention_comment?: string;
 
   // Maybe create abstract class for these columns?
   @Exclude()
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   crt_timestamp?: Date;
 
   @Exclude()
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', nullable: true, select: false })
   crt_user_id?: number; //TODO: foreign
 
   @Exclude()
-  @Column({ type: 'char', length: 6, nullable: true })
+  @Column({ type: 'char', length: 6, nullable: true, select: false })
   crt_ip_addr?: number; //TODO: type
 
   @Exclude()
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', nullable: true, select: false })
   admin_user_id?: number; //TODO: foreign
 
   @Exclude()
-  @Column({ type: 'timestamp without time zone', nullable: true })
+  @Column({ type: 'timestamp without time zone', nullable: true, select: false })
   admin_timestamp?: Date;
 
   @Exclude()
-  @Column({ type: 'char', length: 6, nullable: true })
+  @Column({ type: 'char', length: 6, nullable: true, select: false })
   admin_ip_addr?: number; //TODO: type
 
   @Exclude()
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   upd_timestamp?: Date;
 
   @Exclude()
-  @VersionColumn({type: 'numeric', default: 0 })
+  @VersionColumn({type: 'numeric', default: 0, select: false })
   upd_count?: number;
 
-  @DeleteDateColumn()
+  @Exclude()
+  @DeleteDateColumn({ select: false })
   deletedAt?: Date;
 
+  @Exclude()
   @Column({select: false})
   @Generated("uuid")
   uuid: string;

@@ -8,6 +8,7 @@ import { TrigsModule } from './trigs/trigs.module';
 import { LogsModule } from './logs/logs.module';
 import { PhotosModule } from './photos/photos.module';
 import { UsersModule } from './users/users.module';
+import { AuthzModule } from './authz/authz.module';
 
 @Module({
   imports: [
@@ -20,9 +21,7 @@ import { UsersModule } from './users/users.module';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
       synchronize: true,
-      autoLoadEntities: true, // autoloads all entities registeres with forFeature()
-      // entities: ['**/*.entity{.ts,.js}'],
-      // entities: ['dist/**/*.entity.js'],
+      autoLoadEntities: true,
       migrationsTableName: 'migration',
       migrations: ['src/migration/*.ts'],
       cli: { migrationsDir: 'src/migration' },
@@ -31,6 +30,7 @@ import { UsersModule } from './users/users.module';
     LogsModule,
     PhotosModule,
     UsersModule,
+    AuthzModule,
   ],
   controllers: [AppController],
   providers: [
