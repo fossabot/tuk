@@ -1,8 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,5 +10,4 @@ export class User {
 
   @Column({ type: 'varchar', length: 300 })
   description: string;
-
 }

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PhotosService } from './photos.service';
 // import { Photo } from './entities/photo';
 
@@ -8,7 +16,6 @@ import { ApiTags } from '@nestjs/swagger';
 
 @Controller('photos')
 @ApiTags('photos')
-
 export class PhotosController {
   constructor(private readonly photosService: PhotosService) {}
 

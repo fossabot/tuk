@@ -1,40 +1,58 @@
-import { Condition, CurrentUse, HistoricUse, PhysicalType, Status } from "../entities/trig.entity";
-import { IsNotEmpty, IsPositive, IsLongitude, IsLatitude, Min, IsOptional, Length, IsEnum} from 'class-validator';
+import {
+  Condition,
+  CurrentUse,
+  HistoricUse,
+  PhysicalType,
+  Status,
+} from '../entities/trig.entity';
+
+import {
+  // IsNotEmpty,
+  IsPositive,
+  IsLongitude,
+  IsLatitude,
+  Min,
+  IsOptional,
+  Length,
+  IsEnum,
+  IsNumber,
+} from 'class-validator';
 
 export class CreateTrigDto {
-    @IsOptional()
-    @IsPositive()
-    id: number;
+  @IsOptional()
+  @IsPositive()
+  id: number;
 
-    @Length(3, 50)
-    name: string;
+  @Length(3, 50)
+  name: string;
 
-    @IsLatitude()
-    wgs_lat: number;
+  @IsNumber()
+  @IsLatitude()
+  wgs_lat: number;
 
-    @IsLongitude()
-    wgs_lon: number;
+  @IsLongitude()
+  wgs_lon: number;
 
-    @Min(0)
-    @IsOptional()
-    osgb_eastings: number;
+  @Min(0)
+  @IsOptional()
+  osgb_eastings: number;
 
-    @Min(0)
-    @IsOptional()
-    osgb_northings: number;
+  @Min(0)
+  @IsOptional()
+  osgb_northings: number;
 
-    @IsEnum(PhysicalType)	
-    physical_type: PhysicalType;
+  @IsEnum(PhysicalType)
+  physical_type: PhysicalType;
 
-    @IsEnum(CurrentUse)	
-    current_use: CurrentUse;
+  @IsEnum(CurrentUse)
+  current_use: CurrentUse;
 
-    @IsEnum(HistoricUse)	
-    historic_use: HistoricUse;
+  @IsEnum(HistoricUse)
+  historic_use: HistoricUse;
 
-    @IsEnum(Condition)	
-    condition: Condition;
+  @IsEnum(Condition)
+  condition: Condition;
 
-    @IsEnum(Status)	
-    status: Status;
+  @IsEnum(Status)
+  status: Status;
 }

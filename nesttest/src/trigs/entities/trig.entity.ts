@@ -262,7 +262,7 @@ export class Trig {
   deletedAt?: Date;
 
   @Exclude()
-  @Column({ select: false })
+  @Column()
   @Generated('uuid')
   uuid: string;
 

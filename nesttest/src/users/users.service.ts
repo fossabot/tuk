@@ -6,7 +6,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -22,7 +21,7 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  findAll() {    
+  findAll() {
     return this.usersRepository.find();
   }
 
@@ -33,8 +32,8 @@ export class UsersService {
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.usersRepository.save({
       id: id,
-      ...updateUserDto
-    })
+      ...updateUserDto,
+    });
   }
 
   async remove(id: number) {

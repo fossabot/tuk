@@ -9,25 +9,34 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+// import { IsNumberString } from 'class-validator';
 import { AuthGuard } from '@nestjs/passport';
+
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { TrigsService } from './trigs.service';
 import { CreateTrigDto } from './dto/create-trig.dto';
 import { UpdateTrigDto } from './dto/update-trig.dto';
 
+// export class FindOneParams {
+//   @IsNumberString()
+//   id: number;
+// }
+
 @Controller(['trigs', 'trig']) // backwards compatibility with python FastAPI experiment - TODO: remove later
 @ApiTags('trigs') // swagger
 @ApiBearerAuth('jwt') // swagger
-@UseInterceptors(ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor) // add exposed fields and remove excluded fields from entities
 export class TrigsController {
   constructor(private readonly trigsService: TrigsService) {}
 
   /**
    * Create a new trig record
    */
-  // @UseGuards(AuthGuard('tukjwt'))
   @UseGuards(AuthGuard())
   @Post()
   create(@Body() createTrigDto: CreateTrigDto) {
@@ -42,19 +51,21 @@ export class TrigsController {
     return this.trigsService.findAll();
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  // findOne(@Param() params: FindOneParams) {
+  // findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    // return this.trigsService.findOne(+params.id);
     return this.trigsService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard())
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTrigDto: UpdateTrigDto) {
     return this.trigsService.update(+id, updateTrigDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard())
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.trigsService.remove(+id);

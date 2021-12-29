@@ -39,8 +39,8 @@ describe('TrigsController', () => {
             ),
             remove: jest.fn(),
           },
-        }, 
-        ],
+        },
+      ],
     }).compile();
 
     trigsController = module.get<TrigsController>(TrigsController);

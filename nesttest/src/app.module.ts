@@ -33,10 +33,6 @@ import { AuthzModule } from './authz/authz.module';
     AuthzModule,
   ],
   controllers: [AppController],
-  providers: [
-    ConfigService,
-    AppService,
-  ],
+  providers: [ConfigService, AppService],
 })
-
 export class AppModule {}

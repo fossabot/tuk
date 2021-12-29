@@ -6,7 +6,6 @@ import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 @Injectable()
 export class PhotosService {
   constructor(
@@ -22,7 +21,7 @@ export class PhotosService {
     return this.photosRepository.save(photo);
   }
 
-  findAll() {    
+  findAll() {
     return this.photosRepository.find();
   }
 
@@ -33,8 +32,8 @@ export class PhotosService {
   update(id: number, updatePhotoDto: UpdatePhotoDto) {
     return this.photosRepository.save({
       id: id,
-      ...updatePhotoDto
-    })
+      ...updatePhotoDto,
+    });
   }
 
   async remove(id: number) {

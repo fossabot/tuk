@@ -5,7 +5,13 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      // transform: true,
+    }),
+  );
   app.enableCors();
 
   // Set up swagger (OpenAPI frontend API browser)
@@ -13,10 +19,13 @@ async function bootstrap() {
     .setTitle('TrigpointingUK API')
     .setDescription('The API for TrigpointingUK, used by the new SPA website')
     .setVersion('1.0')
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'jwt')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'jwt',
+    )
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  const swaggerOptions = { customSiteTitle: "TUK CLI" } 
+  const swaggerOptions = { customSiteTitle: 'TUK CLI' };
   SwaggerModule.setup('api', app, swaggerDocument, swaggerOptions);
 
   // Start the app

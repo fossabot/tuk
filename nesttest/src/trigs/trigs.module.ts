@@ -8,6 +8,6 @@ import { AuthzModule } from 'src/authz/authz.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Trig]), AuthzModule],
   controllers: [TrigsController],
-  providers: [TrigsService]
+  providers: [TrigsService],
 })
 export class TrigsModule {}
