@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors();
 
   // Set up swagger (OpenAPI frontend API browser)
   const swaggerConfig = new DocumentBuilder()
@@ -15,9 +16,7 @@ async function bootstrap() {
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'jwt')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
-  const swaggerOptions = {
-    customSiteTitle: "TUK CLI",
-  } 
+  const swaggerOptions = { customSiteTitle: "TUK CLI" } 
   SwaggerModule.setup('api', app, swaggerDocument, swaggerOptions);
 
   // Start the app

@@ -66,6 +66,9 @@ export class TrigsService {
       trig.osgb_point = osgb_point;
     }
 
+    // Soft undelete
+    trig.deletedAt = null;
+
     // console.log(trig);
     return this.trigsRepository.save(trig);
   }

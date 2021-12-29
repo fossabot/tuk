@@ -1,27 +1,25 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, UseGuards } from '@nestjs/common';
-import { TrigsService } from './trigs.service';
-// import { Trig } from './entities/trig';
-
-import { CreateTrigDto } from './dto/create-trig.dto';
-import { UpdateTrigDto } from './dto/update-trig.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 
+import { TrigsService } from './trigs.service';
+import { CreateTrigDto } from './dto/create-trig.dto';
+import { UpdateTrigDto } from './dto/update-trig.dto';
+
 @Controller('trigs')
-@ApiTags('trigs')
-
+@ApiTags('trigs') // swagger
+@ApiBearerAuth('jwt') // swagger
 @UseInterceptors(ClassSerializerInterceptor)
-@ApiBearerAuth('jwt')
-
 
 export class TrigsController {
   constructor(private readonly trigsService: TrigsService) {}
 
   /**
-   * Create a new trig
+   * Create a new trig record
    */
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('tukjwt'))
+  @UseGuards(AuthGuard())
   @Post()
   create(@Body() createTrigDto: CreateTrigDto) {
     return this.trigsService.create(createTrigDto);
@@ -30,7 +28,6 @@ export class TrigsController {
   /**
    * List all trigpoints
    */
-
   @Get()
   findAll() {
     return this.trigsService.findAll();
