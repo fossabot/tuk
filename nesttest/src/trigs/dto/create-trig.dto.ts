@@ -3,6 +3,7 @@ import { IsNotEmpty, IsPositive, IsLongitude, IsLatitude, Min, IsOptional, Lengt
 
 export class CreateTrigDto {
     @IsOptional()
+    @IsPositive()
     id: number;
 
     @Length(3, 50)

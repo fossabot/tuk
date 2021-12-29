@@ -1,17 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-
 
 import { TrigsService } from './trigs.service';
 import { CreateTrigDto } from './dto/create-trig.dto';
 import { UpdateTrigDto } from './dto/update-trig.dto';
 
-@Controller('trigs')
+@Controller(['trigs', 'trig']) // backwards compatibility with python FastAPI experiment - TODO: remove later
 @ApiTags('trigs') // swagger
 @ApiBearerAuth('jwt') // swagger
 @UseInterceptors(ClassSerializerInterceptor)
-
 export class TrigsController {
   constructor(private readonly trigsService: TrigsService) {}
 
@@ -33,7 +42,7 @@ export class TrigsController {
     return this.trigsService.findAll();
   }
 
-  // @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.trigsService.findOne(+id);
