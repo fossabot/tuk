@@ -7,7 +7,6 @@ import {
 } from '../entities/trig.entity';
 
 import {
-  // IsNotEmpty,
   IsPositive,
   IsLongitude,
   IsLatitude,
@@ -15,8 +14,8 @@ import {
   IsOptional,
   Length,
   IsEnum,
-  IsNumber,
 } from 'class-validator';
+// https://github.com/typestack/class-validator#validation-decorators
 
 export class CreateTrigDto {
   @IsOptional()
@@ -26,7 +25,6 @@ export class CreateTrigDto {
   @Length(3, 50)
   name: string;
 
-  @IsNumber()
   @IsLatitude()
   wgs_lat: number;
 
