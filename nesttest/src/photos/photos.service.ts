@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Photo } from './entities/photo.entity';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
-import { ApiProperty } from '@nestjs/swagger';
 
 @Injectable()
 export class PhotosService {
@@ -15,8 +14,9 @@ export class PhotosService {
 
   create(createPhotoDto: CreatePhotoDto): Promise<Photo> {
     const photo = new Photo();
-    photo.name = createPhotoDto.name;
-    photo.description = createPhotoDto.description;
+    Object.keys(createPhotoDto).forEach((key) => {
+      photo[key] = createPhotoDto[key];
+    });
 
     return this.photosRepository.save(photo);
   }

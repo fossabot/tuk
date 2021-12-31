@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
   },
   {
     path: '/about',
@@ -18,31 +18,32 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   {
-    path: "/profile",
-    name: "profile",
+    path: '/profile',
+    name: 'profile',
     component: Profile,
-    beforeEnter: useRouteGuard
+    beforeEnter: useRouteGuard,
   },
   {
-    path: "/trig/:trigid",
-    name: "trig",
+    path: '/trig/:trigid',
+    name: 'trig',
     component: Trig,
-    props: propsParser({trigid: Number})
+    props: propsParser({ trigid: Number }),
   },
   {
-    path: "/user/:userid",
-    name: "user",
+    path: '/user/:userid',
+    name: 'user',
     component: Profile, // TODO: Sort this out
-    props: propsParser({userid: Number})
+    props: propsParser({ userid: Number }),
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
 })
 
 export default router

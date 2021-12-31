@@ -9,5 +9,6 @@ import { AuthzModule } from 'src/authz/authz.module';
   imports: [TypeOrmModule.forFeature([Trig]), AuthzModule],
   controllers: [TrigsController],
   providers: [TrigsService],
+  exports: [TrigsService],
 })
 export class TrigsModule {}

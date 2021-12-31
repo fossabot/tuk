@@ -19,7 +19,7 @@ import { TrigsService } from './trigs.service';
 import { CreateTrigDto } from './dto/create-trig.dto';
 import { UpdateTrigDto } from './dto/update-trig.dto';
 
-@Controller(['trigs', 'trig']) // backwards compatibility with python FastAPI experiment - TODO: remove later
+@Controller('trigs')
 @ApiTags('trigs') // swagger
 @ApiBearerAuth('jwt') // swagger
 @UseInterceptors(ClassSerializerInterceptor) // add exposed fields and remove excluded fields from entities

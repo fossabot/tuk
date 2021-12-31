@@ -15,6 +15,7 @@ import { AuthzModule } from './authz/authz.module';
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('POSTGRES_HOST'),
@@ -28,7 +29,6 @@ import { AuthzModule } from './authz/authz.module';
         migrations: ['src/migration/*.ts'],
         cli: { migrationsDir: 'src/migration' },
       }),
-      inject: [ConfigService],
     }),
     TrigsModule,
     LogsModule,

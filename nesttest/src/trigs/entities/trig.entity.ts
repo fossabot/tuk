@@ -11,8 +11,10 @@ import {
   VersionColumn,
   Index,
   DeleteDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
+import { Log } from 'src/logs/entities/log.entity';
 
 export enum PhysicalType {
   PILLAR = 'Pillar',
@@ -267,6 +269,10 @@ export class Trig {
   uuid: string;
 
   // Foreign keys
+  @OneToMany((type) => Log, (log) => log.id)
+  @JoinColumn({ name: 'log_id' })
+  logs: Log[];
+
   @OneToMany((type) => Photo, (photo) => photo.trig)
   photos: Photo[];
 }

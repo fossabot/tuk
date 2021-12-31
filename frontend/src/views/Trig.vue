@@ -3,7 +3,12 @@
     <span class="visually-hidden">Loading...</span>
   </div>
   <div class="trig" v-if="!loading">
-    <TrigDetails :trigid="trigid" :name="name" :waypoint="waypoint" description="Blank" />
+    <TrigDetails
+      :trigid="trigid"
+      :name="name"
+      :waypoint="waypoint"
+      description="Blank"
+    />
     <p>API response {{ response }}</p>
   </div>
 </template>
@@ -11,66 +16,68 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import TrigDetails from '@/components/TrigDetails.vue'
-import axios from "axios";
+import axios from 'axios'
 
 export default defineComponent({
-  name: "trig",
-  
+  name: 'trig',
+
   components: {
-    TrigDetails
+    TrigDetails,
   },
-  
+
   props: {
     trigid: {
       type: Number,
-      default: 42
-    }
+      default: 42,
+    },
   },
-  
+
   data() {
     return {
-      name: "",
-      response: "",
+      name: '',
+      response: '',
       loading: true,
-    };
+    }
   },
 
   computed: {
     waypoint() {
-      var strNum: string = this.trigid?.toString() ?? "";
-      while ( strNum.length < 4 ) strNum = "0" + strNum;
-      return "WP" + strNum;
-    }
+      var strNum: string = this.trigid?.toString() ?? ''
+      while (strNum.length < 4) strNum = '0' + strNum
+      return 'WP' + strNum
+    },
   },
 
-  created () {
+  created() {
     // fetch the data when the view is created
     this.fetchData()
   },
-  
+
   watch: {
     // call again the method if the route changes
-    '$route': 'fetchData'
+    $route: 'fetchData',
   },
 
   methods: {
-    async fetchData () {
-      this.name = "<loading>"
+    async fetchData() {
+      this.name = '<loading>'
       this.loading = true
       const trigid = this.$route.params.trigid
       if (trigid) {
         try {
-          const response = await axios.get(`${process.env.VUE_APP_TUK_API}/trig/${trigid}`)
+          const response = await axios.get(
+            `${process.env.VUE_APP_TUK_API}/trigs/${trigid}`,
+          )
           this.name = response.data.name
           this.response = JSON.stringify(response)
         } catch (error) {
-          this.name="Error!"
+          this.name = 'Error!'
         } finally {
-          this.loading = false;
+          this.loading = false
         }
       }
     },
-  }
+  },
 })
 
 // function pad(num: string, size: number) {
@@ -78,5 +85,4 @@ export default defineComponent({
 //   while (strNum.length < size) strNum = "0" + strNum;
 //   return strNum;
 // }
-
 </script>
