@@ -53,7 +53,7 @@ async function bootstrap() {
     },
   };
 
-  SwaggerModule.setup('api', app, swaggerDocument, swaggerOptions);
+  SwaggerModule.setup('docs', app, swaggerDocument, swaggerOptions);
 
   // Start the app
   await app.listen(3000);

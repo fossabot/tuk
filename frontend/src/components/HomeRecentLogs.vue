@@ -5,20 +5,20 @@
 
   <table class="table" v-if="!loading">
     <tbody>
-      <tr v-for="log in response" :key="log.log_id">
+      <tr v-for="log in logs" :key="log.log_id">
         <td>{{ log.log_timestamp }}</td>
-        <td>
+        <!-- <td>
           <router-link :to="{ name: 'user', params: { userid: log.user_id } }">
             {{ log.user_name }}
           </router-link>
-        </td>
+        </td> -->
         <td><smiley :status="log.log_status" /></td>
         <td>
-          <router-link :to="{ name: 'trig', params: { trigid: log.trig_id } }">
-            {{ log.waypoint }}
+          <router-link :to="{ name: 'trig', params: { trigid: log.trig.id } }">
+            {{ log.trig.waypoint }}
           </router-link>
         </td>
-        <td>{{ log.trig_name }}</td>
+        <td>{{ log.trig.name }}</td>
       </tr>
     </tbody>
   </table>
@@ -37,16 +37,15 @@ import axios from 'axios'
 import Smiley from '@/components/Smiley.vue'
 
 interface Log {
-  log_id: string
-  log_status: string
-  log_text: string
-  user_id: string
-  user_name: string
-  trig_id: string
-  trig_name: string
-  waypoint: string
-  log_timestamp: string
-  upd_timestamp: string
+  id: string
+  text: string
+  wgs_lat: string
+  wgs_lon: string
+  trig: {
+    id: string
+    waypoint: string
+    name: string
+  }
 }
 
 export default defineComponent({
@@ -56,7 +55,7 @@ export default defineComponent({
   },
   data() {
     return {
-      response: [] as Log[],
+      logs: [] as Log[],
       loading: true,
     }
   },
@@ -70,8 +69,8 @@ export default defineComponent({
         const response = await axios.get(
           `${process.env.VUE_APP_TUK_API}/logs/recent`,
         )
-        this.response = response.data
-        console.log(this.response)
+        this.logs = response.data
+        console.log(this.logs)
       } finally {
         this.loading = false
       }
