@@ -1,5 +1,5 @@
-import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as crypto from 'crypto';
@@ -12,6 +12,10 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  // add exposed fields and remove excluded fields from entities
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  // allow global CORS
   app.enableCors();
 
   // Set up swagger (OpenAPI frontend API browser)
