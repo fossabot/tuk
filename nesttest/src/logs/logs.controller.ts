@@ -6,8 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { LogsService } from './logs.service';
 // import { Log } from './entities/log';
