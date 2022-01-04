@@ -14,6 +14,7 @@
 </template>
 
 <script lang="ts">
+import { useAuth } from '@/auth/useAuthService'
 import { defineComponent } from 'vue'
 import TrigDetails from '@/components/TrigDetails.vue'
 import axios from 'axios'
@@ -65,8 +66,16 @@ export default defineComponent({
       const trigid = this.$route.params.trigid
       if (trigid) {
         try {
+          // Get the access token from the auth wrapper
+          const token = await useAuth().getTokenSilently()
+          console.log('token is ' + token)
           const response = await axios.get(
             `${process.env.VUE_APP_TUK_API}/trigs/${trigid}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
           )
           this.name = response.data.name
           this.response = JSON.stringify(response)

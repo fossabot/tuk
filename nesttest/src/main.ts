@@ -28,16 +28,34 @@ async function bootstrap() {
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'jwt',
     )
+    // .addOAuth2(
+    //   {
+    //     type: 'oauth2',
+    //     flows: {
+    //       implicit: {
+    //         authorizationUrl:
+    //           'https://teasel.eu.auth0.com/authorize?audience=https://api.trigpointing.dev' +
+    //           `&nonce=${nonce}`,
+    //         tokenUrl: 'https://teasel.eu.auth0.com/oauth/token',
+    //         scopes: { admin: 'Administrators' }, // { profile: 'profile' }
+    //       },
+    //     },
+    //   },
+    //   'oauth2',
+    // )
     .addOAuth2(
       {
         type: 'oauth2',
         flows: {
-          implicit: {
+          authorizationCode: {
             authorizationUrl:
               'https://teasel.eu.auth0.com/authorize?audience=https://api.trigpointing.dev' +
               `&nonce=${nonce}`,
             tokenUrl: 'https://teasel.eu.auth0.com/oauth/token',
-            scopes: { admin: 'Administrators' }, // { profile: 'profile' }
+            scopes: {
+              admin: 'Administrators',
+              'create:trigs': 'Create Trigpoint records',
+            },
           },
         },
       },
@@ -49,10 +67,10 @@ async function bootstrap() {
     customSiteTitle: 'TUK CLI',
     explorer: true,
     swaggerOptions: {
-      persistAuthorization: false,
-      oauth2RedirectUrl: 'http://localhost:3000/api/',
+      persistAuthorization: true,
+      oauth2RedirectUrl: 'http://localhost:3000/docs/oauth2-redirect.html',
       oauth: {
-        clientId: 'MwNqc2NJF2GnX7fZDTxffZIYSgdl6sCP',
+        clientId: 'HZvQMRc1HLlLNgF1GnfKc142p6uepKBD',
       },
     },
   };

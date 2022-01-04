@@ -4,7 +4,6 @@ Source code for TrigpointingME website
 
 ### Example queries
 
-
 <!-- ```json
 {
   "id": 2,
@@ -37,44 +36,40 @@ curl -X 'POST' \
  -->
 
 {
-  "id": 4,
-  "name": "LAX",
-  "wgs_lat": 33.9434,
-  "wgs_lon": -118.4079
+"id": 4,
+"name": "LAX",
+"wgs_lat": 33.9434,
+"wgs_lon": -118.4079
 }
 
-
 {
-  "id": 2,
-  "name": "London",
-  "wgs_lat": 51.5074,
-  "wgs_lon":  -0.1278
+"id": 2,
+"name": "London",
+"wgs_lat": 51.5074,
+"wgs_lon": -0.1278
 }
 
-
 {
-  "id": 11,
-  "name": "missing OSGB",
-  "wgs_lat": 51.12345,
-  "wgs_lon": -0.123456
+"id": 11,
+"name": "missing OSGB",
+"wgs_lat": 51.12345,
+"wgs_lon": -0.123456
 }
 
-
 {
-  "id": 12,
-  "name": "missing WGS",
-  "osgb_eastings": 531421.98,
-  "osgb_northings": 137692.54
+"id": 12,
+"name": "missing WGS",
+"osgb_eastings": 531421.98,
+"osgb_northings": 137692.54
 }
 
-
 {
-  "id": 13,
-  "name": "Both present",
-  "wgs_lat": 1,
-  "wgs_lon": 2,
-  "osgb_eastings": 3,
-  "osgb_northings": 4
+"id": 13,
+"name": "Both present",
+"wgs_lat": 1,
+"wgs_lon": 2,
+"osgb_eastings": 3,
+"osgb_northings": 4
 }
 
 ### Authentication
@@ -105,5 +100,14 @@ curl -X 'POST' \
   "condition": "G",
   "status": "10"
 }'
+
+curl --request POST   --url https://teasel.eu.auth0.com/oauth/token   --header 'content-type: application/json'   --data '{"client_id":"vumsBbKMblsrjlHyjOyDR5cQDhnqgESE","client_secret":"AfDgQG0u3Pkmu-eY_-VGgTt8u-KoSUTKIglE4lM_oYu6YVwZDkrie680NQyqaT5_","audience":"https://api.trigpointing.dev","grant_type":"client_credentials"}' | jq
+
+curl --request GET   --url http://localhost:3000/trigs   --header 'authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlEwRXdORUZDTmtZeE1EUTJOVVV5TVRkRU9VRXdRamhHTmtSRlFURTBSalV6TWtNd09FWkNSZyJ9.eyJpc3MiOiJodHRwczovL3RlYXNlbC5ldS5hdXRoMC5jb20vIiwic3ViIjoidnVtc0JiS01ibHNyamxIeWpPeURSNWNRRGhucWdFU0VAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLnRyaWdwb2ludGluZy5kZXYiLCJpYXQiOjE2NDEyMjY3MjUsImV4cCI6MTY0MTMxMzEyNSwiYXpwIjoidnVtc0JiS01ibHNyamxIeWpPeURSNWNRRGhucWdFU0UiLCJzY29wZSI6ImFkbWluIHVwZGF0ZTp0cmlncyBjcmVhdGU6dHJpZ3MiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJwZXJtaXNzaW9ucyI6WyJhZG1pbiIsInVwZGF0ZTp0cmlncyIsImNyZWF0ZTp0cmlncyJdfQ.nNUSVLO91cpyXwhL176PzNHPSwN1hc29MTp7pRVmQicxegkZiZ3O7sq1n25K9BnDfprirQsxPAaetElebSeNvW4hBr_wk_CzQgSX18AjLt4aCSpc7YBgWOLmEgRcR1aeB_vIJDb3rmq7vC0YKZQeye9vKq4Z0CG41tXdF8H1VSvYD0pyheJj7GZlCPSP7mvuREiAeR0LNOPj7GCzYfgDRUcRp2xdJ4GTVpmHa6iikdoWpRpKTnCaj64vbBHVyUYsp-aKSI9ShseIUfoaVzBSPWF_O1rIQ5kZcbMG_XlkZ-9JOmNaR1Ce48pvbHLTcfh91p-6ZNQRpazePAdGV-RIEg' | jq | head
+
+curl --request GET   --url http://localhost:3000/trigs/1   --header 'authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlEwRXdORUZDTmtZeE1EUTJOVVV5TVRkRU9VRXdRamhHTmtSRlFURTBSalV6TWtNd09FWkNSZyJ9.eyJpc3MiOiJodHRwczovL3RlYXNlbC5ldS5hdXRoMC5jb20vIiwic3ViIjoidnVtc0JiS01ibHNyamxIeWpPeURSNWNRRGhucWdFU0VAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLnRyaWdwb2ludGluZy5kZXYiLCJpYXQiOjE2NDEyMjY3MjUsImV4cCI6MTY0MTMxMzEyNSwiYXpwIjoidnVtc0JiS01ibHNyamxIeWpPeURSNWNRRGhucWdFU0UiLCJzY29wZSI6ImFkbWluIHVwZGF0ZTp0cmlncyBjcmVhdGU6dHJpZ3MiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJwZXJtaXNzaW9ucyI6WyJhZG1pbiIsInVwZGF0ZTp0cmlncyIsImNyZWF0ZTp0cmlncyJdfQ.nNUSVLO91cpyXwhL176PzNHPSwN1hc29MTp7pRVmQicxegkZiZ3O7sq1n25K9BnDfprirQsxPAaetElebSeNvW4hBr_wk_CzQgSX18AjLt4aCSpc7YBgWOLmEgRcR1aeB_vIJDb3rmq7vC0YKZQeye9vKq4Z0CG41tXdF8H1VSvYD0pyheJj7GZlCPSP7mvuREiAeR0LNOPj7GCzYfgDRUcRp2xdJ4GTVpmHa6iikdoWpRpKTnCaj64vbBHVyUYsp-aKSI9ShseIUfoaVzBSPWF_O1rIQ5kZcbMG_XlkZ-9JOmNaR1Ce48pvbHLTcfh91p-6ZNQRpazePAdGV-RIEg' | jq | head
+
+
+
 
 ```

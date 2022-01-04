@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Permissions } from '../permissions.decorator';
+import { PermissionsGuard } from '../permissions.guard';
+
+import { ApiBearerAuth, ApiOAuth2, ApiTags } from '@nestjs/swagger';
 
 import { TrigsService } from './trigs.service';
 import { CreateTrigDto } from './dto/create-trig.dto';
@@ -19,15 +22,17 @@ import { UpdateTrigDto } from './dto/update-trig.dto';
 
 @Controller('trigs')
 @ApiTags('trigs') // swagger
-@ApiBearerAuth('jwt') // swagger
+@ApiBearerAuth('tukjwt') // swagger
+@ApiOAuth2([]) // swagger
 export class TrigsController {
   constructor(private readonly trigsService: TrigsService) {}
 
   /**
    * Create a new trig record
    */
-  @UseGuards(AuthGuard())
   @Post()
+  @UseGuards(AuthGuard(), PermissionsGuard) // oauth
+  @Permissions('create:trigs') // oauth
   create(@Body() createTrigDto: CreateTrigDto) {
     return this.trigsService.create(createTrigDto);
   }
@@ -44,6 +49,10 @@ export class TrigsController {
    * Get details for a single trigpoint
    */
   @Get(':id')
+  // @ApiOAuth2(['create:trigs'])
+  @UseGuards(AuthGuard(), PermissionsGuard)
+  @Permissions('create:trigs') // TODO: just for testing
+  // @Permissions('admin') // TODO: just for testing
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.trigsService.findOne(+id);
   }

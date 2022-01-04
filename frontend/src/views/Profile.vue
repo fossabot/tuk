@@ -14,7 +14,6 @@
         <p class="lead text-muted">{{ user }}</p>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -23,10 +22,20 @@ import { useAuth } from '@/auth/useAuthService'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
+  // async setup() {
+  // const { user, getIdTokenClaims } = useAuth()
+  // console.log('user')
+  // console.log(user)
+  // const tokens = await getIdTokenClaims()
+  // console.log('tokens')
+  // console.log(tokens)
+  // console.log('tokens-end')
+  // return { user, tokens }
   setup() {
-    const {user} = useAuth();
-    return {user}
+    const { user } = useAuth()
+    console.log('user')
+    console.log(user)
+    return { user }
   },
 })
 </script>
-
