@@ -31,8 +31,8 @@ export class TrigsController {
    * Create a new trig record
    */
   @Post()
-  @UseGuards(AuthGuard(), PermissionsGuard) // oauth
-  @Permissions('create:trigs') // oauth
+  @UseGuards(AuthGuard(), PermissionsGuard)
+  @Permissions('create:trigs')
   create(@Body() createTrigDto: CreateTrigDto) {
     return this.trigsService.create(createTrigDto);
   }
@@ -49,16 +49,18 @@ export class TrigsController {
    * Get details for a single trigpoint
    */
   @Get(':id')
-  // @ApiOAuth2(['create:trigs'])
   @UseGuards(AuthGuard(), PermissionsGuard)
   @Permissions('create:trigs') // TODO: just for testing
-  // @Permissions('admin') // TODO: just for testing
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.trigsService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard())
+  /**
+   * Update a trigpoint
+   */
   @Patch(':id')
+  @UseGuards(AuthGuard(), PermissionsGuard)
+  @Permissions('create:trigs')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTrigDto: UpdateTrigDto,
@@ -66,8 +68,12 @@ export class TrigsController {
     return this.trigsService.update(+id, updateTrigDto);
   }
 
-  @UseGuards(AuthGuard())
+  /**
+   * Soft delete a trigpoint
+   */
   @Delete(':id')
+  @UseGuards(AuthGuard(), PermissionsGuard)
+  @Permissions('create:trigs')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.trigsService.remove(+id);
   }

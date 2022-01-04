@@ -28,21 +28,6 @@ async function bootstrap() {
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'jwt',
     )
-    // .addOAuth2(
-    //   {
-    //     type: 'oauth2',
-    //     flows: {
-    //       implicit: {
-    //         authorizationUrl:
-    //           'https://teasel.eu.auth0.com/authorize?audience=https://api.trigpointing.dev' +
-    //           `&nonce=${nonce}`,
-    //         tokenUrl: 'https://teasel.eu.auth0.com/oauth/token',
-    //         scopes: { admin: 'Administrators' }, // { profile: 'profile' }
-    //       },
-    //     },
-    //   },
-    //   'oauth2',
-    // )
     .addOAuth2(
       {
         type: 'oauth2',
