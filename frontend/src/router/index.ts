@@ -32,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'trig',
     component: Trig,
     props: propsParser({ trigid: Number }),
+    beforeEnter: useRouteGuard,
   },
   {
     path: '/user/:userid',

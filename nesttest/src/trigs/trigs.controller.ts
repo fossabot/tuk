@@ -49,7 +49,7 @@ export class TrigsController {
    * Get details for a single trigpoint
    */
   @Get(':id')
-  @UseGuards(AuthGuard(), PermissionsGuard)
+  @UseGuards(AuthGuard(), PermissionsGuard) // TODO: just for testing
   @Permissions('create:trigs') // TODO: just for testing
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.trigsService.findOne(+id);

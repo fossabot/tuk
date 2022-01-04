@@ -38,6 +38,7 @@ export default defineComponent({
       name: '',
       response: '',
       loading: true,
+      authloading: useAuth().loading,
     }
   },
 
@@ -57,18 +58,20 @@ export default defineComponent({
   watch: {
     // call again the method if the route changes
     $route: 'fetchData',
+    authloading: 'fetchData',
   },
 
   methods: {
     async fetchData() {
       this.name = '<loading>'
       this.loading = true
+      console.log('loading trig ' + this.$route.params.trigid)
       const trigid = this.$route.params.trigid
-      if (trigid) {
+      if (trigid && !this.authloading) {
         try {
           // Get the access token from the auth wrapper
+          console.log(useAuth())
           const token = await useAuth().getTokenSilently()
-          console.log('token is ' + token)
           const response = await axios.get(
             `${process.env.VUE_APP_TUK_API}/trigs/${trigid}`,
             {
@@ -81,6 +84,7 @@ export default defineComponent({
           this.response = JSON.stringify(response)
         } catch (error) {
           this.name = 'Error!'
+          console.log(error)
         } finally {
           this.loading = false
         }
