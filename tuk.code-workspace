@@ -1,17 +1,22 @@
 {
-	"folders": [
-		{
-			"name": "backend",
-			"path": "backend"
-		},
-		{
-			"name": "frontend",
-			"path": "frontend"
-		},
-		{
-			"name": "tuk",
-			"path": "."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "name": "backend",
+      "path": "backend"
+    },
+    {
+      "name": "frontend",
+      "path": "frontend"
+    },
+    {
+      "name": "tuk",
+      "path": "."
+    },
+    {
+      "path": "nesttest"
+    }
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "tuk"
+  }
 }

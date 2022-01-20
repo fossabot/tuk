@@ -4,8 +4,8 @@ import { Repository } from 'typeorm';
 import { Log } from './entities/log.entity';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UpdateLogDto } from './dto/update-log.dto';
-import { Trig } from 'src/trigs/entities/trig.entity';
-import { TrigsService } from 'src/trigs/trigs.service';
+import { Trig } from '../trigs/entities/trig.entity';
+import { TrigsService } from '../trigs/trigs.service';
 
 @Injectable()
 export class LogsService {

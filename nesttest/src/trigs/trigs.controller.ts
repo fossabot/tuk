@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
+
 import { Permissions } from '../permissions.decorator';
 import { PermissionsGuard } from '../permissions.guard';
 
@@ -22,7 +23,7 @@ import { UpdateTrigDto } from './dto/update-trig.dto';
 
 @Controller('trigs')
 @ApiTags('trigs') // swagger
-@ApiBearerAuth('tukjwt') // swagger
+@ApiBearerAuth('jwt') // swagger
 @ApiOAuth2([]) // swagger
 export class TrigsController {
   constructor(private readonly trigsService: TrigsService) {}
@@ -31,7 +32,7 @@ export class TrigsController {
    * Create a new trig record
    */
   @Post()
-  @UseGuards(AuthGuard(), PermissionsGuard)
+  @UseGuards(AuthGuard('tukjwt'), PermissionsGuard)
   @Permissions('create:trigs')
   create(@Body() createTrigDto: CreateTrigDto) {
     return this.trigsService.create(createTrigDto);
@@ -49,7 +50,8 @@ export class TrigsController {
    * Get details for a single trigpoint
    */
   @Get(':id')
-  @UseGuards(AuthGuard(), PermissionsGuard) // TODO: just for testing
+  @UseGuards(AuthGuard('tukjwt'), PermissionsGuard)
+  // TODO: just for testing
   @Permissions('create:trigs') // TODO: just for testing
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.trigsService.findOne(+id);
@@ -59,7 +61,7 @@ export class TrigsController {
    * Update a trigpoint
    */
   @Patch(':id')
-  @UseGuards(AuthGuard(), PermissionsGuard)
+  @UseGuards(AuthGuard('tukjwt'), PermissionsGuard)
   @Permissions('create:trigs')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -72,7 +74,7 @@ export class TrigsController {
    * Soft delete a trigpoint
    */
   @Delete(':id')
-  @UseGuards(AuthGuard(), PermissionsGuard)
+  @UseGuards(AuthGuard('tukjwt'), PermissionsGuard)
   @Permissions('create:trigs')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.trigsService.remove(+id);

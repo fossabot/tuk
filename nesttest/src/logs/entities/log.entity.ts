@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
-import { Photo } from 'src/photos/entities/photo.entity';
-import { Trig } from 'src/trigs/entities/trig.entity';
+import { Photo } from '../../photos/entities/photo.entity';
+import { Trig } from '../../trigs/entities/trig.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

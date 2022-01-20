@@ -4,7 +4,6 @@ import propsParser from 'vue-router-parse-props'
 import Home from '@/views/Home.vue'
 import Profile from '@/views/Profile.vue'
 import Trig from '@/views/Trig.vue'
-import User from '@/views/User.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {

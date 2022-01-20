@@ -3,20 +3,31 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as crypto from 'crypto';
+import * as cookieParser from 'cookie-parser';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Setup validation pipes
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
     }),
   );
+
+  // Get the dotenv config from the app
+  const configService = app.get(ConfigService);
+
   // add exposed fields and remove excluded fields from entities
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   // allow global CORS
   app.enableCors();
+
+  // allow cookies
+  app.use(cookieParser());
 
   // Set up swagger (OpenAPI frontend API browser)
   const nonce = crypto.randomBytes(16).toString('base64');
@@ -34,12 +45,16 @@ async function bootstrap() {
         flows: {
           authorizationCode: {
             authorizationUrl:
-              'https://teasel.eu.auth0.com/authorize?audience=https://api.trigpointing.dev' +
+              `${configService.get<string>('AUTH0_ISSUER_URL')}authorize` +
+              `?audience=${configService.get<string>('AUTH0_AUDIENCE')}` +
               `&nonce=${nonce}`,
-            tokenUrl: 'https://teasel.eu.auth0.com/oauth/token',
+            tokenUrl: `${configService.get<string>(
+              'AUTH0_ISSUER_URL',
+            )}oauth/token`,
             scopes: {
               admin: 'Administrators',
               'create:trigs': 'Create Trigpoint records',
+              'openid profile email': 'Include email address',
             },
           },
         },
@@ -53,9 +68,9 @@ async function bootstrap() {
     explorer: true,
     swaggerOptions: {
       persistAuthorization: true,
-      oauth2RedirectUrl: 'http://localhost:3000/docs/oauth2-redirect.html',
+      oauth2RedirectUrl: configService.get<string>('AUTH0_REDIRECT_URL'),
       oauth: {
-        clientId: 'HZvQMRc1HLlLNgF1GnfKc142p6uepKBD',
+        clientId: configService.get<string>('AUTH0_CLIENT_ID'),
       },
     },
   };
@@ -63,6 +78,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, swaggerDocument, swaggerOptions);
 
   // Start the app
-  await app.listen(3000);
+  await app.listen(configService.get<number>('PORT'));
 }
 bootstrap();

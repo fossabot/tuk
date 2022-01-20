@@ -18,11 +18,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'tukjwt') {
       issuer: process.env.AUTH0_ISSUER_URL,
       algorithms: ['RS256'],
     });
-    console.log('JwtStrategy');
     console.log(this);
   }
 
   validate(payload: unknown): unknown {
+    // console.log('payload');
+    // console.log(payload);
     return payload;
   }
 }

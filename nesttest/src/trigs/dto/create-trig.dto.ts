@@ -1,10 +1,9 @@
 import {
-  Condition,
+  TrigCondition,
   CurrentUse,
   HistoricUse,
   PhysicalType,
-  Status,
-} from '../entities/trig.entity';
+} from 'src/enum_types';
 
 import {
   IsPositive,
@@ -15,6 +14,7 @@ import {
   Length,
   IsEnum,
 } from 'class-validator';
+import { Status } from 'src/enum_types';
 // https://github.com/typestack/class-validator#validation-decorators
 
 export class CreateTrigDto {
@@ -26,9 +26,11 @@ export class CreateTrigDto {
   name: string;
 
   @IsLatitude()
+  @IsOptional()
   wgs_lat: number;
 
   @IsLongitude()
+  @IsOptional()
   wgs_lon: number;
 
   @Min(0)
@@ -48,8 +50,8 @@ export class CreateTrigDto {
   @IsEnum(HistoricUse)
   historic_use: HistoricUse;
 
-  @IsEnum(Condition)
-  condition: Condition;
+  @IsEnum(TrigCondition)
+  condition: TrigCondition;
 
   @IsEnum(Status)
   status: Status;

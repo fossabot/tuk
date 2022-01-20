@@ -9,6 +9,7 @@ import { LogsModule } from './logs/logs.module';
 import { PhotosModule } from './photos/photos.module';
 import { UsersModule } from './users/users.module';
 import { AuthzModule } from './authz/authz.module';
+import { CoordsService } from './coords/coords.service';
 
 @Module({
   imports: [
@@ -28,6 +29,10 @@ import { AuthzModule } from './authz/authz.module';
         migrationsTableName: 'migration',
         migrations: ['src/migration/*.ts'],
         cli: { migrationsDir: 'src/migration' },
+        extra: {
+          ssl: true,
+        },
+        ssl: { rejectUnauthorized: false },
       }),
     }),
     TrigsModule,
@@ -37,6 +42,6 @@ import { AuthzModule } from './authz/authz.module';
     AuthzModule,
   ],
   controllers: [AppController],
-  providers: [ConfigService, AppService],
+  providers: [ConfigService, AppService, CoordsService],
 })
 export class AppModule {}

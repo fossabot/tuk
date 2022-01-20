@@ -1,23 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { CoordsService } from 'src/coords/coords.service';
 import { Repository } from 'typeorm';
 import { CreateTrigDto } from './dto/create-trig.dto';
 
-import { Trig } from './entities/trig.entity';
+import {
+  TrigCondition,
+  CurrentUse,
+  HistoricUse,
+  PhysicalType,
+  Status,
+} from 'src/enum_types';
 import { TrigsService } from './trigs.service';
+import { Trig } from './entities/trig.entity';
 
 const trig01 = {
   id: 1,
-  name: 'trig01',
+  name: 'trig',
   wgs_lat: 51,
   wgs_lon: -1,
-  osgb_eastings: 470267,
-  osgb_northings: 122765,
+  osgb_eastings: 470267.34536504897,
+  osgb_northings: 122765.53816158895,
   wgs_point: { type: 'Point', coordinates: [-1, 51] },
   osgb_point: {
     type: 'Point',
     coordinates: [470267, 122765],
   },
+  physical_type: PhysicalType.FBM,
+  current_use: CurrentUse.NONE,
+  historic_use: HistoricUse.FBM,
+  condition: TrigCondition.GOOD,
+  status: Status.PILLAR,
 };
 
 const trigArray = [{ trig01 }, { trig01 }];
@@ -29,6 +42,7 @@ describe('TrigsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        CoordsService,
         TrigsService,
         {
           provide: getRepositoryToken(Trig),
@@ -56,50 +70,44 @@ describe('TrigsService', () => {
       // arrange
       const test1Dto: CreateTrigDto = {
         id: 1,
-        name: 'test01',
+        name: 'trig',
         wgs_lat: 51,
         wgs_lon: -1,
         osgb_eastings: null,
         osgb_northings: null,
+        physical_type: PhysicalType.FBM,
+        current_use: CurrentUse.NONE,
+        historic_use: HistoricUse.FBM,
+        condition: TrigCondition.GOOD,
+        status: Status.PILLAR,
       };
 
       //act
       const r1 = await service.create(test1Dto);
 
-      console.log(r1);
-      console.log(test1Dto);
       //assert
-
-      expect(service).toBeDefined();
-
-      expect(r1).toEqual(test1Dto);
+      expect(r1).toEqual(trig01);
     });
 
     it('given a dto with missing wgs coords', () => {
-      // arrange
       const trig2Dto: CreateTrigDto = {
-        id: 2,
-        name: 'test02',
+        id: 1,
+        name: 'trig',
         wgs_lat: null,
         wgs_lon: null,
         osgb_eastings: 470267.34536504897,
         osgb_northings: 122765.53816158895,
+        physical_type: PhysicalType.FBM,
+        current_use: CurrentUse.NONE,
+        historic_use: HistoricUse.FBM,
+        condition: TrigCondition.GOOD,
+        status: Status.PILLAR,
       };
       const repoSpy = jest.spyOn(repository, 'save');
 
-      //act
       const r2 = service.create(trig2Dto);
 
-      console.log(r2);
-      console.log(trig2Dto);
-
-      //assert
-      expect(r2).resolves.toEqual(trig2Dto);
-      expect(repoSpy).toBeCalledWith();
-
-      // it('should successfully calculate missing osgb coords', () => {
-      //   expect(result).toEqual(trig01);
-      // });
+      expect(r2).resolves.toEqual(trig01);
     });
   });
 });
