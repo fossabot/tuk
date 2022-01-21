@@ -2,7 +2,12 @@
 
 Source code for TrigpointingME website
 
-### Example queries
+## Test results
+
+NestTest:
+[![codecov](https://codecov.io/gh/TrigpointingUK/tuk/branch/main/graph/badge.svg?token=WAG6U0E2S6)](https://codecov.io/gh/TrigpointingUK/tuk)
+
+## Example CURL queries
 
 <!-- ```json
 {
