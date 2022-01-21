@@ -5,6 +5,7 @@ import { Status, Licence, Units } from 'src/enum_types';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { MyUserDto } from './dto/my-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -63,6 +64,10 @@ const myUser01Dto: MyUserDto = {
   mobile_number: 1234567890,
 };
 
+const updateMyUser01: UpdateUserDto = {
+  nickname: 'NewNickname',
+};
+
 const auth0ResultsUser01: Object = {
   sub: 'mockauth0',
   picture: 'http://avatar.com/avatar1',
@@ -74,11 +79,16 @@ const auth0ResultsUser01: Object = {
 
 const userArray = [{ user01 }, { user01 }];
 
-const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-
 describe('UsersService', () => {
   let service: UsersService;
   let repository: Repository<User>;
+
+  const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+
+  let repoSaveSpy: jest.SpyInstance;
+  let repoDeleteSpy: jest.SpyInstance;
+  let repoFindSpy: jest.SpyInstance;
+  let repoFindOneSpy: jest.SpyInstance;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -89,6 +99,7 @@ describe('UsersService', () => {
           useValue: {
             find: jest.fn().mockResolvedValue(userArray),
             findOne: jest.fn().mockResolvedValue(user01),
+            findOneOrFail: jest.fn().mockResolvedValue(user01),
             save: jest.fn().mockResolvedValue(user01),
             remove: jest.fn(),
             softDelete: jest.fn(),
@@ -99,7 +110,11 @@ describe('UsersService', () => {
 
     service = module.get<UsersService>(UsersService);
     repository = module.get<Repository<User>>(getRepositoryToken(User));
-    consoleSpy.mockClear();
+
+    repoFindSpy = jest.spyOn(repository, 'find');
+    repoFindOneSpy = jest.spyOn(repository, 'findOne');
+    repoSaveSpy = jest.spyOn(repository, 'save');
+    repoDeleteSpy = jest.spyOn(repository, 'softDelete');
   });
 
   afterEach(() => {
@@ -112,59 +127,60 @@ describe('UsersService', () => {
 
   describe('create, update and delete', () => {
     it('given a dto to create', async () => {
-      const repoSpy = jest.spyOn(repository, 'save');
       const r1 = service.create(user01Dto);
       expect(r1).resolves.toEqual(user01);
-      expect(repoSpy).toHaveBeenCalledWith(user01Dto);
+      expect(repoSaveSpy).toHaveBeenCalledWith(user01Dto);
     });
-    it('given a dto to update', () => {
-      const repoSpy = jest.spyOn(repository, 'save');
-      const r1 = service.updateMyUser(user01Dto);
-      expect(r1).resolves.toEqual(user01);
-      expect(repoSpy).toHaveBeenCalledWith(user01Dto);
+    it('given a dto to update', async () => {
+      const r1 = service.updateMyUser('testoauth', updateMyUser01);
+      await expect(r1).resolves.toEqual(user01);
+      expect(repoSaveSpy).toHaveBeenCalledWith({
+        id: user01.id,
+        nickname: updateMyUser01.nickname,
+      });
+    });
+    it('given a non existent oauthuser to fail', async () => {
+      await expect(
+        service.updateMyUser('mismatch', updateMyUser01),
+      ).rejects.toEqual(expect.any(NotFoundException));
+      expect(repoFindOneSpy).not.toHaveBeenCalled();
     });
     it('given a user to delete', async () => {
-      const repoSpy = jest.spyOn(repository, 'softDelete');
       const r1 = service.remove(user01.id);
       expect(r1).resolves.toBeUndefined();
-      expect(repoSpy).toHaveBeenCalledWith(user01.id);
+      expect(repoDeleteSpy).toHaveBeenCalledWith(user01.id);
     });
   });
 
   describe('find', () => {
     it('should find all users', async () => {
-      const repoSpy = jest.spyOn(repository, 'find');
       const r1 = service.findAll();
       expect(r1).resolves.toEqual(userArray);
-      expect(repoSpy).toHaveBeenCalled();
+      expect(repoFindSpy).toHaveBeenCalled();
     });
 
     it('should find one user', async () => {
-      const repoSpy = jest.spyOn(repository, 'findOne');
-      const r1 = service.findOne(user01.id);
+      const r1 = service.findById(user01.id);
       expect(r1).resolves.toEqual(user01);
-      expect(repoSpy).toHaveBeenCalledWith(user01.id);
+      expect(repoFindOneSpy).toHaveBeenCalledWith(user01.id);
     });
   });
 
   describe('myUser', () => {
     it('should throw an exception if no user provided', async () => {
-      const repoSpy = jest.spyOn(repository, 'findOne');
       await expect(
         service.getMyUser(null, null, null, null, null),
       ).rejects.toEqual(expect.any(NotFoundException));
-      expect(repoSpy).not.toHaveBeenCalled();
+      expect(repoFindOneSpy).not.toHaveBeenCalled();
     });
 
     it('should find an existing user by oauthUser', async () => {
-      const repoSpy = jest.spyOn(repository, 'findOne');
       const r1 = service.getMyUser('testoauth', null, null, null, null);
       expect(r1).resolves.toEqual(myUser01Dto);
-      expect(repoSpy).toHaveBeenCalled();
+      expect(repoFindOneSpy).toHaveBeenCalled();
     });
 
     it('should find an existing user by email', async () => {
-      const repoSpy = jest.spyOn(repository, 'findOne');
       const auth0Spy = jest.spyOn(service, 'getAuth0UserDetails');
       auth0Spy.mockImplementation(
         (): Promise<Object> => Promise.resolve(auth0ResultsUser01),
@@ -177,13 +193,12 @@ describe('UsersService', () => {
         null,
       );
       await expect(r1).resolves.toEqual(myUser01Dto);
-      expect(repoSpy).toHaveBeenCalled();
+      expect(repoFindOneSpy).toHaveBeenCalled();
       expect(auth0Spy).toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith('User found by email');
     });
 
     it('should find an existing user by cookies', async () => {
-      const repoSpy = jest.spyOn(repository, 'findOne');
       const auth0Spy = jest.spyOn(service, 'getAuth0UserDetails');
       auth0Spy.mockImplementation(
         (): Promise<Object> => Promise.resolve(auth0ResultsUser01),
@@ -196,13 +211,12 @@ describe('UsersService', () => {
         null,
       );
       await expect(r1).resolves.toEqual(myUser01Dto);
-      expect(repoSpy).toHaveBeenCalled();
+      expect(repoFindOneSpy).toHaveBeenCalled();
       expect(auth0Spy).toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith('User found by cookies');
     });
 
     it('should create a new user if nothing matched', async () => {
-      const repoSpy = jest.spyOn(repository, 'findOne');
       const auth0Spy = jest.spyOn(service, 'getAuth0UserDetails');
       auth0Spy.mockImplementation(
         (): Promise<Object> => Promise.resolve(auth0ResultsUser01),
@@ -215,7 +229,7 @@ describe('UsersService', () => {
         null,
       );
       await expect(r1).resolves.toEqual(myUser01Dto);
-      expect(repoSpy).toHaveBeenCalled();
+      expect(repoFindOneSpy).toHaveBeenCalled();
       expect(auth0Spy).toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('New user'),

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ImATeapotException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Repository } from 'typeorm';
 import axios from 'axios';
@@ -18,6 +22,27 @@ export class UsersService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
   ) {}
+
+  /**
+   * Find a full existing user object or fail
+   * @param oauthUser
+   * @returns
+   */
+  async _findByOauth(oauthUser: string): Promise<User> {
+    console.log(`Find existing user : ${oauthUser}`);
+    if (oauthUser == null) {
+      console.log('ERROR: oauthUser not provided');
+      throw new NotFoundException(`No oauth user provided`);
+    }
+    const userbyoauth: User = await this.usersRepository.findOneOrFail({
+      where: { oauth: oauthUser },
+    });
+    if (userbyoauth.oauth === oauthUser) {
+      return userbyoauth;
+    } else {
+      throw new ImATeapotException(`FATAL: userbyoauth.oauth != oauthUser`);
+    }
+  }
 
   /**
    * Create a new user record
@@ -72,7 +97,7 @@ export class UsersService {
       });
       if (userbycryptpw?.id == parseInt(authidCookie)) {
         console.log('User found by cookies');
-        await this.addAuth0Details(userbycryptpw, bearerToken);
+        await this._addAuth0Details(userbycryptpw, bearerToken);
         this.usersRepository.save(userbycryptpw);
         return this._userToMyUserDto(userbycryptpw);
       } else {
@@ -90,7 +115,7 @@ export class UsersService {
       });
       if (userbyemail?.email == oauthEmail) {
         console.log('User found by email');
-        await this.addAuth0Details(userbyemail, bearerToken);
+        await this._addAuth0Details(userbyemail, bearerToken);
         this.usersRepository.save(userbyemail);
         return this._userToMyUserDto(userbyemail);
       }
@@ -100,7 +125,7 @@ export class UsersService {
 
     // User not found - create new TUK user
     let newUserDto = new CreateUserDto();
-    await this.addAuth0Details(newUserDto, bearerToken);
+    await this._addAuth0Details(newUserDto, bearerToken);
     newUserDto.nickname = uniqueNamesGenerator({
       dictionaries: [adjectives, animals],
       separator: '-',
@@ -116,7 +141,7 @@ export class UsersService {
    * @param bearerToken
    * @returns
    */
-  async addAuth0Details(
+  async _addAuth0Details(
     user: User | CreateUserDto,
     bearerToken: string,
   ): Promise<User | CreateUserDto> {
@@ -135,7 +160,8 @@ export class UsersService {
    * @param updateUserDto
    * @returns Promise<User>
    */
-  updateMyUser(updateUserDto: UpdateUserDto) {
+  updateMyUser(oauthUser: string, updateUserDto: UpdateUserDto) {
+    const myUser = this._findByOauth(oauthUser);
     return this.usersRepository.save({
       ...updateUserDto,
     });
@@ -155,7 +181,7 @@ export class UsersService {
    * @param id
    * @returns Promise<User>
    */
-  findOne(id: number) {
+  findById(id: number) {
     return this.usersRepository.findOne(id);
   }
 

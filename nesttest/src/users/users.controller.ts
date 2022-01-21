@@ -59,16 +59,19 @@ export class UsersController {
 
   @Patch('me')
   @UseGuards(AuthGuard('tukjwt'))
-  updateMyUser(@Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateMyUser(updateUserDto);
+  updateMyUser(@Req() request: Request, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateMyUser(
+      request['user']['sub'],
+      updateUserDto,
+    );
   }
 
   /**
    * Find a user
    */
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(+id);
+  findById(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findById(+id);
   }
 
   /**
