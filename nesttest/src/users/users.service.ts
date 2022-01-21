@@ -70,11 +70,13 @@ export class UsersService {
           oauth: IsNull(),
         },
       });
-      if (userbycryptpw != null) {
+      if (userbycryptpw?.id == parseInt(authidCookie)) {
         console.log('User found by cookies');
         await this.addAuth0Details(userbycryptpw, bearerToken);
         this.usersRepository.save(userbycryptpw);
         return this._userToMyUserDto(userbycryptpw);
+      } else {
+        console.log('Legacy cookies not matched');
       }
     } else {
       console.log('Legacy cookies not present');
@@ -86,7 +88,7 @@ export class UsersService {
       const userbyemail: User = await this.usersRepository.findOne({
         where: { email: oauthEmail, oauth: IsNull() },
       });
-      if (userbyemail != null) {
+      if (userbyemail?.email == oauthEmail) {
         console.log('User found by email');
         await this.addAuth0Details(userbyemail, bearerToken);
         this.usersRepository.save(userbyemail);
@@ -145,7 +147,6 @@ export class UsersService {
    */
   async findAll() {
     const users = await this.usersRepository.find();
-    console.log(users);
     return users;
   }
 
@@ -207,6 +208,7 @@ export class UsersService {
     myUser.about = user.about;
     myUser.homepage = user.homepage;
     myUser.avatar = user.avatar;
+    myUser.mobile_number = user.mobile_number;
     myUser.licence_default = user.licence_default;
     myUser.status_max = user.status_max;
     myUser.units = user.units;
