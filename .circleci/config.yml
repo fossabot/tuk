@@ -1,0 +1,33 @@
+# Docs : https://circleci.com/docs/2.0/configuration-reference
+# Orb: https://circleci.com/developer/orbs/orb/circleci/node
+# Docker executor: https://circleci.com/docs/2.0/executor-types/
+# Convenience Images: https://circleci.com/developer/images/image/cimg/node
+
+version: 2.1
+
+orbs:
+  node: circleci/node@4.7
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/node:16.10
+
+    environment:
+      - NODE_ENV: development
+
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+          app-dir: nesttest
+
+      - run:
+          name: Run jest coverage
+          command: npm run test:codecov
+          working_directory: nesttest
+
+workflows:
+  run-tests:
+    jobs:
+      - build-and-test
