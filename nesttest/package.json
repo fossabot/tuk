@@ -98,6 +98,7 @@
       "<rootDir>/main.ts"
     ],
     "coverageDirectory": "../coverage",
+    "collectCoverage": true,
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"

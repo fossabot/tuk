@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { ImATeapotException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Status, Licence, Units } from 'src/enum_types';
@@ -142,7 +142,7 @@ describe('UsersService', () => {
     it('given a non existent oauthuser to fail', async () => {
       await expect(
         service.updateMyUser('mismatch', updateMyUser01),
-      ).rejects.toEqual(expect.any(NotFoundException));
+      ).rejects.toEqual(expect.any(ImATeapotException));
       expect(repoFindOneSpy).not.toHaveBeenCalled();
     });
     it('given a user to delete', async () => {

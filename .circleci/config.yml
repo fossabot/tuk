@@ -30,6 +30,7 @@ jobs:
 
       - run:
           name: Upload to codecov
+          when: always
           command: npm run test:codecov
           working_directory: nesttest
 
