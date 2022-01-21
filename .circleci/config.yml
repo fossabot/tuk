@@ -25,6 +25,11 @@ jobs:
 
       - run:
           name: Run jest coverage
+          command: npm run test:cov
+          working_directory: nesttest
+
+      - run:
+          name: Upload to codecov
           command: npm run test:codecov
           working_directory: nesttest
 
