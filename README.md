@@ -1,4 +1,6 @@
 # TrigpointingME
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTrigpointingUK%2Ftuk.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTrigpointingUK%2Ftuk?ref=badge_shield)
+
 
 Source code for TrigpointingME website
 
@@ -111,3 +113,7 @@ curl --request GET   --url http://localhost:3000/trigs/1   --header 'authorizati
 
 
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTrigpointingUK%2Ftuk.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FTrigpointingUK%2Ftuk?ref=badge_large)
