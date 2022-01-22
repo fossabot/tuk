@@ -4,8 +4,8 @@ Source code for TrigpointingME website
 
 ## Test results
 
-NestTest:
 [![codecov](https://codecov.io/gh/TrigpointingUK/tuk/branch/main/graph/badge.svg?token=WAG6U0E2S6)](https://codecov.io/gh/TrigpointingUK/tuk)
+[![CircleCI](https://circleci.com/gh/TrigpointingUK/tuk/tree/main.svg?style=shield)](https://circleci.com/gh/TrigpointingUK/tuk/tree/main)
 
 ## Example CURL queries
 
